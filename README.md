@@ -34,6 +34,8 @@ This single-page application (SPA) uses HTML, CSS, and JavaScript to capture the
     - using github directly
        open this link in your browser:
          [https://raw.githubusercontent.com/alfu32/arc-solder-google-goggles/work/index.html]
+         or
+         [https://alfu32.github.io/arc-solder-google-goggles/]
 3. **Open the Application**:
     Open your web browser and navigate to `http://localhost:8080` (the port might differ if you use a different server).
 
