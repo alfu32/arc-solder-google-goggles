@@ -19,28 +19,30 @@
             width: 100vw;
             height: 100vh;
         }
-        .split {
+        #leftCanvas {
             width: 50%;
             height: 100%;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 50%;
         }
-        canvas {
-            width: 49%;
+        #rightCanvas {
+            width: 50%;
             height: 100%;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            bottom: 0;
+            right: 0;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <div class="split">
             <canvas id="leftCanvas"></canvas>
-        </div>
-        <div class="split">
             <canvas id="rightCanvas"></canvas>
-        </div>
     </div>
     <script>
         const constraints = {
