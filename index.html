@@ -15,6 +15,13 @@
             background: #000;
         }
         #container {
+            position:fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+
+            background:#000;
             display: flex;
             width: 100vw;
             height: 100vh;
@@ -44,6 +51,8 @@
             <canvas id="leftCanvas"></canvas>
             <canvas id="rightCanvas"></canvas>
     </div>
+    <video id="vid"/>
+    <div id="container"></div>
     <script>
         const constraints = {
             video: {
@@ -54,7 +63,7 @@
         };
 
         async function init() {
-            const video = document.createElement('video');
+            const video = document.getElementById('vid');
             video.setAttribute('autoplay', '');
             video.setAttribute('playsinline', '');
             document.body.appendChild(video);
@@ -70,8 +79,31 @@
 
                 video.addEventListener('play', () => {
                     const draw = () => {
-                        leftContext.drawImage(video, 0, 0, leftCanvas.width, leftCanvas.height);
-                        rightContext.drawImage(video, 0, 0, rightCanvas.width, rightCanvas.height);
+                        leftCanvas.width = leftCanvas.clientWidth;
+                        leftCanvas.height = leftCanvas.clientHeight;
+                        rightCanvas.width = rightCanvas.clientWidth;
+                        rightCanvas.height = rightCanvas.clientHeight;
+
+                        const aspectRatio = video.videoWidth / video.videoHeight;
+                        let drawWidth = leftCanvas.width;
+                        let drawHeight = drawWidth / aspectRatio;
+
+                        if (drawHeight > leftCanvas.height) {
+                            drawHeight = leftCanvas.height;
+                            drawWidth = drawHeight * aspectRatio;
+                        }
+
+                        const padding=10
+
+                        const offsetX = (leftCanvas.width - drawWidth) / 2;
+                        const offsetY = (leftCanvas.height - drawHeight) / 2;
+
+                        leftContext.clearRect(0, 0, leftCanvas.width, leftCanvas.height);
+                        rightContext.clearRect(0, 0, rightCanvas.width, rightCanvas.height);
+
+                        leftContext.drawImage(video, offsetX+padding, offsetY+padding, drawWidth-2*padding, drawHeight-2*padding);
+                        rightContext.drawImage(video, offsetX+padding, offsetY+padding, drawWidth-2*padding, drawHeight-2*padding);
+
                         requestAnimationFrame(draw);
                     };
                     draw();
