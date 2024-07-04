@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Feed for Google Cardboard</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000;
+        }
+        #canvas {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+        }
+        .split {
+            width: 50%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas">
+        <div class="split" id="left"></div>
+        <div class="split" id="right"></div>
+    </div>
+    <script>
+        const constraints = {
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                facingMode: "environment"
+            }
+        };
+
+        async function init() {
+            const video = document.createElement('video');
+            video.setAttribute('autoplay', '');
+            video.setAttribute('playsinline', '');
+            document.body.appendChild(video);
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+
+                const leftCanvas = document.getElementById('left');
+                const rightCanvas = document.getElementById('right');
+
+                video.addEventListener('play', () => {
+                    const draw = () => {
+                        leftCanvas.style.backgroundImage = `url(${video.srcObject})`;
+                        rightCanvas.style.backgroundImage = `url(${video.srcObject})`;
+                        leftCanvas.style.backgroundSize = '100% 100%';
+                        rightCanvas.style.backgroundSize = '100% 100%';
+                        requestAnimationFrame(draw);
+                    };
+                    draw();
+                });
+            } catch (err) {
+                console.error('Error accessing media devices.', err);
+            }
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
