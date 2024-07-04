@@ -14,22 +14,33 @@
             height: 100vh;
             background: #000;
         }
-        #canvas {
-            position: absolute;
+        #container {
+            display: flex;
             width: 100vw;
             height: 100vh;
-            display: flex;
         }
         .split {
             width: 50%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            width: 100%;
             height: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="canvas">
-        <div class="split" id="left"></div>
-        <div class="split" id="right"></div>
+    <div id="container">
+        <div class="split">
+            <canvas id="leftCanvas"></canvas>
+        </div>
+        <div class="split">
+            <canvas id="rightCanvas"></canvas>
+        </div>
     </div>
     <script>
         const constraints = {
@@ -50,15 +61,15 @@
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
 
-                const leftCanvas = document.getElementById('left');
-                const rightCanvas = document.getElementById('right');
+                const leftCanvas = document.getElementById('leftCanvas');
+                const rightCanvas = document.getElementById('rightCanvas');
+                const leftContext = leftCanvas.getContext('2d');
+                const rightContext = rightCanvas.getContext('2d');
 
                 video.addEventListener('play', () => {
                     const draw = () => {
-                        leftCanvas.style.backgroundImage = `url(${video.srcObject})`;
-                        rightCanvas.style.backgroundImage = `url(${video.srcObject})`;
-                        leftCanvas.style.backgroundSize = '100% 100%';
-                        rightCanvas.style.backgroundSize = '100% 100%';
+                        leftContext.drawImage(video, 0, 0, leftCanvas.width, leftCanvas.height);
+                        rightContext.drawImage(video, 0, 0, rightCanvas.width, rightCanvas.height);
                         requestAnimationFrame(draw);
                     };
                     draw();
